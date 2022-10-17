@@ -1,0 +1,97 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Update Profile</title>
+</head> -->
+{% extends "Patient_home1.html" %}
+{% block body %}
+
+<body>
+<form id="form1" name="form1" method="post" action="updpro">
+  <div align="center">
+    <table width="312" border="3">
+      <tr>
+        <td width="200" class="form-label" >Name </td>
+        <td width="171"><label>
+          <input type="text" name="nam" value="{{val['Name']}}" class="form-control form-control-lg" required/>
+        </label></td>
+      </tr>
+      <tr>
+        <td>Home </td>
+        <td><label>
+          <input type="text" name="hom" class="form-control form-control-lg " value="{{val['Home']}}" required/>
+        </label></td>
+      </tr>
+      <tr>
+        <tr>
+          <td>Place</td>
+          <td><label>
+            <input type="text" name="pla" class="form-control form-control-lg " value="{{val['Place']}}" required/>
+          </label></td>
+        </tr>
+        <td>City</td>
+        <td><label>
+          <input type="text" name="cit" class="form-control form-control-lg " value="{{val['City']}}" required/>
+        </label></td>
+      </tr>
+      <td>Pincode</td>
+      <td><label>
+        <input type="number" name="pin" class="form-control form-control-lg " value="{{val['Pincode']}}" required/>
+      </label></td>
+    </tr>
+      <tr>
+        <td>Gender</td>
+        <td><label>
+          <input name="Radio" type="radio" class="form-check-label"  value="MALE" {% if val['Gender']=='Male'  %}checked {% endif %}/>
+          Male
+          <input name="Radio" type="radio" class="form-check-label"  value="FEMALE" {% if val['Gender']=='Female'  %}checked {% endif %}/>
+          Female
+        </label></td>
+      </tr>
+      <tr>
+        <td>Blood Group</td>
+        <td><label>
+          <input type="text" name="blood" class="form-control form-control-lg "  value="{{val['Blood_Group']}}" required />
+        </label></td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td><label>
+          <input type="email" name="mail" class="form-control form-control-lg "  value="{{val['Email']}}" required/>
+        </label></td>
+      </tr>
+      <tr>
+
+      <tr>
+        <td>Date of birth </td>
+        <td><label>
+          <input type="Date" name="birth" class="form-control form-control-lg "  value="{{val['Date_of_birth']}}" required/>
+        </label></td>
+      </tr>
+      <tr>
+        <td>Age</td>
+        <td><label>
+          <input type="number" name="ag" class="form-control form-control-lg "  value="{{val['Age']}}" required/>
+        </label></td>
+      </tr>
+      <tr>
+        <td>Phone number</td>
+        <td><label>
+          <input type="number" name="phone" class="form-control form-control-lg "  value="{{val['Phone_number']}}" required/>
+        </label></td>
+      </tr>
+      <tr>
+        <td colspan="2"><label>
+          <div align="center">
+            <label></label>
+            <input type="submit" align="center" name="Submit" class="btn btn-primary btn-lg"  value="UPDATE" style="background-color: rgb(70, 10, 236);"/>
+          </div>
+        </label></td>
+      </tr>
+      </table>
+  </div>
+</form>
+</body>
+<!-- </html> -->
+{% endblock %}

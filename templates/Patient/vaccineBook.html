@@ -1,0 +1,51 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Vaccine_booking</title>
+</head> -->
+{% extends "Patient_home1.html" %}
+{% block body %}
+
+
+<body>
+<form id="form1" name="form1" method="post" action="">
+  <table width="505" height="345" border="2">
+    <tr>
+      <th width="302" scope="row">Vaccine Name </th>
+      <td width="185"><label>
+        <select name="select3">
+        </select>
+      </label></td>
+    </tr>
+    <tr>
+      <th scope="row">Date</th>
+      <td><label>
+        <input type="date" name="textfield">
+      </label></td>
+    </tr>
+    <tr>
+      <th scope="row">Time</th>
+      <td><label>
+        <select name="select">
+        </select>
+      </label></td>
+    </tr>
+    <tr>
+      <th scope="row">Dose</th>
+      <td><label>
+        <input type="text" name="textfield2">
+      </label></td>
+    </tr>
+    <tr>
+      <th colspan="2" scope="row"><label>
+      <div align="center">
+        <input type="submit" name="Submit" value="BOOK" />
+      </div>
+      </label></th>
+    </tr>
+  </table>
+</form>
+</body>
+<!-- </html> -->
+{% endblock %}

@@ -1,0 +1,38 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Vaccine Booking</title> -->
+{% extends "Patient_home1.html" %}
+{% block body %}
+
+</head>
+
+<body>
+<form id="form1" name="form1" method="post" action="search_schd1">
+  <table width="700" height="262" border="2">
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col"><label>
+        <input type="date" name="textfield" />
+      </label>
+        <label>
+        <input type="submit" name="Submit" value="Search" />
+      </label></th>
+    </tr>
+   
+    <tr>
+      <td>Slots</td>
+      <td>&nbsp;</td>
+    </tr>
+    {% for i in val %}
+    <tr>
+      <td>{{i['Start time']}}-{{i['End time']}}</td>
+      <td><a href="vaccinebook2?id={{i['Vsch_id']}}">BOOK</a></td>
+    </tr>
+    {% endfor%}
+  </table>
+</form>
+</body>
+<!-- </html> -->
+{% endblock %}

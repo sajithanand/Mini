@@ -1,0 +1,66 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>ViewStaffData</title>
+</head> -->
+{% extends "admin_home1.html" %}
+{% block body %}
+<body>
+
+
+<style>
+
+
+
+.scroll{
+  overflow-x: scroll;
+}
+
+</style>
+
+
+<form id="form1" name="form1" method="post" action="">
+  <div class="scroll">
+  <table width="1109" height="345" border="2" class="table table-striped table-hover">
+    <tr>
+      <th width="135" class="bg-info" scope="col">Sl NO</th>
+      <th width="135" class="bg-info" scope="col">Name</th>
+      <th width="80" class="bg-info" scope="col">House</th>
+      <th width="68" class="bg-info" scope="col">Place</th>
+      <th width="48" class="bg-info" scope="col">City</th>
+      <th width="59" class="bg-info" scope="col">Pincode</th>
+      <th width="58" class="bg-info" scope="col">Age</th>
+      <th width="55" class="bg-info" scope="col">Gender</th>
+      <th width="78" class="bg-info" scope="col">Experience</th>
+      <th width="91" class="bg-info" scope="col">Specialization</th>
+      <th width="92" class="bg-info" scope="col">Designation</th>
+      <th width="73" class="bg-info" scope="col">License Number </th>
+      <th width="65" class="bg-info" scope="col">Status</th>
+    </tr>
+{% for i in val %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td height="143">{{i['Name']}}</td>
+      <td>{{i['House']}}</td>
+      <td>{{i['Place']}}</td>
+      <td>{{i['City']}}</td>
+      <td>{{i['Pincode']}}</td>
+      <td>{{i['Age']}}</td>
+      <td>{{i['Gender']}}</td>
+      <td>{{i['Experience']}}</td>
+      <td>{{i['Specialization']}}</td>
+      <td>{{i['Designation']}}</td>
+      <td>{{i['License number']}}</td>
+      <td><button style="background-color: #88f011"><a href="Activate?id={{i['E_id']}}"> Activate</a></button>
+      <button style="background-color:rgb(201, 20, 20)"><a href="Inactivate?id={{i['E_id']}}">Inactivate</a></button></td>
+    </tr>
+{% endfor %}
+  </table>
+
+</div>
+
+</form>
+</body>
+<!-- </html> -->
+{% endblock %}

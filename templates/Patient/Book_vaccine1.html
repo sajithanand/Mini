@@ -1,0 +1,54 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head> -->
+{% extends "Patient_home1.html" %}
+{% block body %}
+
+<style>
+  #customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #customers tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #customers tr:hover {background-color: #ddd;}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #0766f5;
+    color: white;
+  }
+  </style>
+</head>
+
+<body>
+<form id="form1" name="form1" method="post" action="">
+  <table width="800" height="263" border="2" class="table table-striped table-hover" id="customers">
+    <tr>
+      <th>Sl no</th>
+      <th scope="col">Vaccine Name </th>
+      <th scope="col">Details</th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+    {% for i in val %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td>{{i['Name']}}</td></td>
+      <td>{{i['Description']}}</td></td>
+      <td><div align="center"><a href="VaccineBook1?id={{i['vd_id']}}">View_Slots</a></div></td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+</body>
+<!-- /* </html> */ -->
+{% endblock %}
