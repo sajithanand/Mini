@@ -19,7 +19,7 @@
               <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                 <div class="card-body p-4 p-md-5">
                   <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
-                  <form action="/registration" method="post"  enctype="multipart/form-data">
+                  <form action="/registration" method="post" onsubmit="validation()"  enctype="multipart/form-data">
                     <div class="row">
                       <div class="col-md-6 mb-4">
       
@@ -33,8 +33,8 @@
                       <div class="col-md-6 mb-4">
       
                         <div class="form-outline">
-                          <label class="form-label" for="home">Home</label>
-                          <input type="text" id="home" class="form-control form-control-lg " name="home" pattern="[A-Z a-z.]{3,25}" required>
+                          <label class="form-label" for="home">Address</label>
+                          <input type="text" id="home" class="form-control form-control-lg " name="home"   required >
                           
                         </div>
       
@@ -42,37 +42,9 @@
                       
                     </div>
       
+                    
+                    
                     <div class="row">
-                      <div class="col-md-6 mb-4 d-flex align-items-center">
-      
-                        <div class="form-outline datepicker w-100">
-                          <label for="place" class="form-label">Place</label>
-                          <input type="text" class="form-control form-control-lg " id="place" name="place"  pattern="[A-Z a-z.]{3,25}" required>
-                          
-                        </div>
-      
-                        </div>
-                      
-                        <div class="col-md-6 mb-4">
-      
-                          <div class="form-outline">
-                            <label class="form-label" for="City">City</label>
-                            <input type="text" id="City" class="form-control form-control-lg " name="city" pattern="[A-Z a-z.]{3,25}" required>
-                            
-                          </div>
-        
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-4 pb-2">
-      
-                          <div class="form-outline">
-                            <label class="form-label" for="pin">Pincode</label>
-                            <input type="number" id="pin" class="form-control form-control-lg " name="pin" required pattern="[0-9]{6}">
-                            
-                          </div>
-        
-                        </div>
                         <div class="col-md-6 mb-4">
                           <h6 class="mb-2 pb-1">Gender: </h6>
         
@@ -95,7 +67,7 @@
       
                           <div class="form-outline">
                             <label class="form-label" for="age">Age</label>
-                            <input type="number" id="age" class="form-control form-control-lg " name="age" required>
+                            <input type="number" id="age" class="form-control form-control-lg " name="age" min="1" max="110" required>
                             
                           </div>
         
@@ -133,7 +105,7 @@
       
                         <div class="form-outline">
                           <label class="form-label" for="phoneNumber">Phone Number</label>
-                          <input type="tel" id="phoneNumber" class="form-control form-control-lg " name="phone" required pattern="[6789][0-9]{9}">
+                          <input type="tel" id="phoneNumber" class="form-control form-control-lg " name="phone" required pattern="[6789][1-9]{10}">
                           
                         </div>
       
@@ -192,7 +164,7 @@
       
       <style>
           .gradient-custom {
-            background-image: linear-gradient(to right, #46bdf6, #46c8f6, #50d3f3, #61ddf0, #75e6ed, #75ece7, #7af1df, #84f5d6, #85f6c2, #8ef5aa, #9ff390, #b4f074);
+            background-image: linear-gradient(to right, hwb(184 49% 4%), #84d5ee, #8ae7ee, #8ae7ee, #8ae7ee, #8ae7ee, #8ae7ee, #8ae7ee, #8ae7ee, #8ae7ee, #8ae7ee, #8ae7ee);
 
       }
       
@@ -201,13 +173,24 @@
       line-height: 2.15;
       padding-left: .75em;
       padding-right: .75em;
+      z-index: 900;
       }
       .card-registration .select-arrow {
       top: 13px;
       }
       
       </style>
-  
+  <script>
+    function validation(){
+      const age = document.getElementById('age').value;
+    if (age ==0) {
+      alert("enter valid age");
+      return false;
+    }
+
+    }
+    
+  </script>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

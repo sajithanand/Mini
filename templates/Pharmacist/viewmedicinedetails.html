@@ -1,51 +1,82 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Untitled Document</title>
-</head>
+<title>Medicine details</title> -->
 
-<body>
-<form id="form1" name="form1" method="post" action="">
-  <table width="566" height="346" border="2">
+<style>
+  #customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid rgb(14, 7, 7);
+    padding: 8px;
+  }
+  
+  #customers tr:nth-child(even){background-color: #99e4e9;}
+  
+  #customers tr:hover {background-color: rgb(179, 167, 221);}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #99e4e9;
+    color: rgb(3, 10, 8);
+  }
+  </style>
+</head>
+{% extends "Pharmacist_home.html" %}
+{% block body %}
+
+
+
+
+<body><h1>ADD MEDICINE DETAILS</h1>
+<form id="form1" name="form1" method="post" action="addmedicine">
+  <table width="566" height="346" border="2" id="customers">
     <tr>
       <th width="332" scope="row">Medicine name </th>
-      <td width="216"><label>
-        <input type="text" name="textfield2" />
+      <td width="216" style="background-color:  #99e4e9;"><label>
+        <input type="text" name="textfield2"   required/>
       </label></td>
     </tr>
     <tr>
       <th scope="row">Quantity</th>
       <td><label></label>
         <label>
-        <input type="text" name="textfield4" />
+        <input type="number" name="textfield4" required/>
       </label></td>
     </tr>
     <tr>
-      <th scope="row">Batch number </th>
-      <td><label>
-        <input type="text" name="textfield" />
+      <th scope="row"   style="background-color:  #99e4e9;">Batch number </th>
+      <td  style="background-color:  #99e4e9;"><label>
+        <input type="text" name="textfield"  required/>
       </label></td>
     </tr>
     <tr>
       <th scope="row">Manufacture date </th>
       <td><label>
-        <input type="text" name="textfield3" />
+        <input type="date" name="textfield3" required/>
       </label></td>
     </tr>
     <tr>
       <th scope="row">Expiry date
         <label></label></th>
       <th scope="row"><label>
-        <input type="text" name="textfield5" />
+        <input type="date" name="textfield5" required/>
       </label></th>
     </tr>
     <tr>
       <th colspan="2" scope="row"><label>
-        <input type="submit" name="Submit" value="ADD" />
+        <input type="submit" name="Submit" value="ADD"  class="btn btn-success"/>
       </label></th>
     </tr>
   </table>
 </form>
 </body>
-</html>
+<!-- </html> -->
+{% endblock %}

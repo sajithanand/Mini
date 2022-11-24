@@ -1,0 +1,91 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Manage Medicine</title>
+</head> -->
+{% extends "Pharmacist_home.html" %}
+{% block body %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<!-- <script>
+  function clck()
+  {
+    var  nb=document.getElementById("se").value;
+    var newBrwosers_id= document.querySelector("#select"  + " option[value='" + nb+ "']").dataset.value;
+    document.getElementById("mid").value=newBrwosers_id+"";
+
+  }
+  </script> -->
+  <!-- <script>
+    function clck()
+    {
+      var  nb=document.getElementById("se").value;
+      var newBrwosers_id= document.querySelector("#select"  + " option[value='" + nb+ "']").dataset.value;
+      document.getElementById("mid").value=newBrwosers_id+"";
+  
+    }
+    </script> -->
+
+  <style>
+
+    .scroll{
+       overflow-x: scroll;
+    }
+
+    tr th{
+      font-weight: 700;
+      
+    }
+    .btn{
+      border-radius: 10px;
+    }
+    h1{
+      font-weight: 800;
+      color: rgb(98, 143, 142);
+    }
+    
+  </style>
+<body>
+  <h1 class="text-center">VIEW PRESCSRIPTION</h1>
+  
+<form id="form1" class="mt-5" name="form1" method="post" action="">
+  <!-- <input type="hidden" name="mid" id="mid" value=""/> -->
+  <table class="table table-bordered table-hover dt-responsive"  id="customers">
+    <tr>
+      <th scope="col">PRESCRIPTION</th>
+      <th scope="col">DOCTOR NAME </th>
+      <th scope="col">DATE</th>
+      <th scope="col">STATUS</th>
+      <th scope="col">UPDATE MEDICINE</th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+    {% for i in val %}
+    <tr>
+      <td>{{i['Prescription']}}</td>
+      <td>{{i['Name']}}</td>
+      <td>{{i['Date']}}</td>
+      
+      <td>
+       
+        <br>
+      {% if i['Status']=='pending' %}
+        <a href="edit_status?id={{i['Presc_id']}}"> Update status</a> {% else %}  {{i['Status']}}  {% endif %}</td>
+      <td><a href="medicineDetails"  class="btn btn-outline-danger">UPDATE MEDICINE STOCK</a></td>
+      <td><a href="static/prescription/{{i['Prescription']}}"  class="btn btn-primary"> <i class="bi bi-download"></i>Download</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+</div>
+<script>
+  $(document).ready( function () {
+    $('#customers').DataTable();
+} );
+</script>
+</body>
+<!-- </html> -->
+{% endblock %}

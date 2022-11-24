@@ -6,7 +6,7 @@
 </head> -->
 {% extends "admin_home1.html" %}
 {% block body %}
-<body>
+<body><h1>VIEW STAFF DATA</h1>
 
 
 <style>
@@ -17,15 +17,38 @@
   overflow-x: scroll;
 }
 
+#customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid rgb(14, 7, 7);
+    padding: 8px;
+  }
+  
+  #customers tr:nth-child(even){background-color: #62dd8b;}
+  
+  #customers tr:hover {background-color: rgb(179, 167, 221);}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #62dd8b;
+    color: rgb(3, 10, 8);
+  }
+
 </style>
 
 
-<form id="form1" name="form1" method="post" action="">
+<form id="form1" name="form1" method="post" action="" id="customers">
   <div class="scroll">
-  <table width="1109" height="345" border="2" class="table table-striped table-hover">
+  <table width="1109" height="345" border="2" class="table table-striped table-hover" id="customers">
     <tr>
-      <th width="135" class="bg-info" scope="col">Sl NO</th>
-      <th width="135" class="bg-info" scope="col">Name</th>
+      <th width="135" class="bg-info" scope="col" >Sl NO</th>
+      <th width="135" class="bg-info" scope="col" >Name</th>
       <th width="80" class="bg-info" scope="col">House</th>
       <th width="68" class="bg-info" scope="col">Place</th>
       <th width="48" class="bg-info" scope="col">City</th>
@@ -36,10 +59,11 @@
       <th width="91" class="bg-info" scope="col">Specialization</th>
       <th width="92" class="bg-info" scope="col">Designation</th>
       <th width="73" class="bg-info" scope="col">License Number </th>
+      <th width="73" class="bg-info" scope="col">Registration number </th>
       <th width="65" class="bg-info" scope="col">Status</th>
     </tr>
 {% for i in val %}
-    <tr>
+    <tr class="table-success">
       <td>{{ loop.index }}</td>
       <td height="143">{{i['Name']}}</td>
       <td>{{i['House']}}</td>
@@ -52,8 +76,9 @@
       <td>{{i['Specialization']}}</td>
       <td>{{i['Designation']}}</td>
       <td>{{i['License number']}}</td>
-      <td><button style="background-color: #88f011"><a href="Activate?id={{i['E_id']}}"> Activate</a></button>
-      <button style="background-color:rgb(201, 20, 20)"><a href="Inactivate?id={{i['E_id']}}">Inactivate</a></button></td>
+      <td>{{i['Registration_number']}}</td>
+      <td><button type="button" class="btn btn-primary"><a href="Activate?id={{i['E_id']}}"> Activate</a></button>
+      <button type="button" class="btn btn-danger"><a href="Inactivate?id={{i['E_id']}}">Inactivate</a></button></td>
     </tr>
 {% endfor %}
   </table>

@@ -42,7 +42,7 @@ h6 {
   right: 15px;
   bottom: 15px;
   z-index: 996;
-  background: #149ddd;
+  background: #88f091;
   width: 40px;
   height: 40px;
   border-radius: 50px;
@@ -78,7 +78,7 @@ h6 {
   z-index: 9997;
   transition: all 0.5s;
   padding: 0 15px;
-  background: #395983;
+  background: #ffffff;
   overflow-y: auto;
 }
 
@@ -121,7 +121,7 @@ h6 {
 }
 
 #header .profile .social-links a:hover {
-  background: #149ddd;
+  background: #7cf586;
   color: #fff;
   text-decoration: none;
 }

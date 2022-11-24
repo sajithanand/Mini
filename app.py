@@ -1,10 +1,13 @@
 
 #from crypt import methods
+from email.headerregistry import Address
+from select import select
 from urllib import request
 from flask import *
 app.secret_key="abc"
 from dbconnection import *
 from datetime import datetime
+
 app=Flask(__name__)
 app.secret_key="444"
 from werkzeug.utils import secure_filename
@@ -26,7 +29,7 @@ def contact():
 
 @app.route('/login')
 def log():
-    return render_template("login2.html")
+    return render_template("login.html")
 
 #login function
 @app.route('/login', methods=['post'])
@@ -39,16 +42,20 @@ def login():
     if res is None:
         return '''<script>alert("invalid");window.location="login_index"</script>'''
     elif res['usertype'] == "admin":
+        session['lid']=res['login_id']
         return '''<script>alert("valid");window.location="admin"</script>'''
     elif res['usertype'] == "patient":
         session['lid']=res['login_id'] #getting patient id from login function
                     
         return '''<script>alert("valid");window.location="Patienthome"</script>'''
     elif res['usertype'] == "Doctor":
+        session['lid']=res['login_id']
         return '''<script>alert("valid");window.location="Doctor"</script>'''
     elif res['usertype'] == "Nurse":
+        session['lid']=res['login_id']
         return '''<script>alert("valid");window.location="Nurse"</script>'''
     elif res['usertype'] == "Pharmacist":
+        session['lid']=res['login_id']
         return '''<script>alert("valid");window.location="Pharmacist"</script>'''
     else:
         return '''<scrpit>alert("invalid");window.location="login"</script>'''
@@ -57,10 +64,7 @@ def login():
 @app.route('/registration', methods=['post'])
 def registration():
     name=request.form['fname']
-    home=request.form['home']
-    place=request.form['place']
-    city=request.form['city']
-    pincode=request.form['pin']
+    address=request.form['home']
     Bloodgroup=request.form['Blood_group']
     Gender=request.form['gender']
     age=request.form['age']
@@ -74,8 +78,8 @@ def registration():
     val=(username,password)
     id=iud(qry,val)
    
-    qry1="INSERT INTO `patient details` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-    val1=(str(id),name,home,place,city,pincode,Gender,Bloodgroup,Email,DOB,Phone,age)
+    qry1="INSERT INTO `patient details` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s)"
+    val1=(str(id),name,Gender,Bloodgroup,Email,DOB,Phone,age,address)
     iud(qry1,val1)
     return '''<script>alert("Registerd successfuly");window.location="/"</script>'''
     
@@ -106,7 +110,7 @@ def schedule1():
     strength=request.form['textfield2']
 
     qry1="INSERT INTO `doctor_schedule` VALUES(NULL,%s,%s,%s,%s)"
-    val=(Time,doctor,Date,strength)
+    val=(Time,Date,doctor,strength)
     iud(qry1,val)
 
     return '''<script>alert("Registerd successfully");window.location="manage_schedule"</script>'''    
@@ -119,7 +123,7 @@ def schedule1():
 def man_schedule():
     qr="SELECT * FROM `addstaffdata` WHERE `Designation`=1"
     re=selectall(qr)
-    return render_template("manage_schedule.html",val1=re)
+    return render_template("manage_schedul1.html",val1=re)
 
 @app.route("/search_schedule",methods=['post'])
 def search_schedule():
@@ -128,7 +132,12 @@ def search_schedule():
     re=selectall(qr)
     qr="SELECT `time_slot`.*,`doctor_schedule`.* FROM `doctor_schedule` JOIN `time_slot` ON `time_slot`.`Tid`=`doctor_schedule`.`tid` WHERE `doctor_schedule`.`Emp_id`=%s"
     res=selectall2(qr,did)
-    return render_template("manage_schedule.html",val1=re,val=res)
+    dsid = []
+    for i in res:
+        dsid.append(str(i['sch_id']))
+    a=",".join(dsid)   
+    print(a,"44444444444444444444")
+    return render_template("manage_schedul1.html",val1=re,val=res,dscid=str(a))
 
 #Add Doctor schedule
 @app.route("/Edit_schedule")
@@ -162,34 +171,45 @@ def edit_1():
 @app.route("/delete_schedule")
 def delete_schedule():
     id=request.args.get('id')
-    
-    
-
     qry= "delete FROM `doctor_schedule` WHERE sch_id=%s"
     iud(qry,str(id))
 
     return '''<script>alert("deleted successfully");window.location="manage_schedule"</script>'''
 
 
+
+@app.route("/refresh_schedule")
+def refresh_schedule():
+    sid=request.args.get('id')
+    a = sid.split(',')
+    print(a,type(a),"88888888888888888888")
+    for i in range(0, len(a)):
+        qry= "update `doctor_schedule` set strength=20 WHERE sch_id=%s"
+        iud(qry,str(a[i]))
+        # print(a[i])
+        return '''<script>alert("Slot refreshed successfully");window.location="manage_schedule"</script>'''
+        
+     
 #Add Staff Data
 @app.route("/AddstaffData",methods=['post'])
 def AddstaffData():
-    name=request.form['textfield']
-    home=request.form['textfield2']
-    place=request.form['textfield3']
-    city=request.form['textfield4']
-    pincode=request.form['textfield5']
-    Age=request.form['textfield6']
+    name=request.form['name']
+    home=request.form['Home']
+    place=request.form['place']
+    city=request.form['City']
+    pincode=request.form['pin']
+    Age=request.form['age']
     Gender=request.form['RadioGroup1']
-    Experience=request.form['textfield8']
-    Specialization=request.form['textfield9']
-    Designation=request.form['select']
-    Licensenumber=request.form['textfield11']
-    username=request.form['textfield12']
-    password=request.form['textfield13']
-    image=request.files['file']
-    filname=secure_filename(image.filename)
-    image.save(os.path.join('static/doctorimages',filname))
+    Experience=request.form['experience']
+    Specialization=request.form['Specialization']
+    Designation=request.form['Designation']
+    Licensenumber=request.form['Licensenumber']
+    Registration=request.form['Registration_number']
+    username=request.form['Username']
+    password=request.form['Password']
+    # image=request.files['file']
+    # filname=secure_filename(image.filename)
+    # image.save(os.path.join('static/doctorimages',filname))
 
 
 
@@ -198,32 +218,36 @@ def AddstaffData():
         qry="INSERT INTO `login` VALUES(NULL,%s,%s,'Doctor')"
         val=(username,password)
         id=iud(qry,val)
+        image=request.files['file']
+        filname=secure_filename(image.filename)
+        image.save(os.path.join('static/doctorimages',filname))
 
-        qry1="INSERT INTO `addstaffdata` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'available')"
-        val1=(str(id),name,home,place,city,pincode,Age,Gender,Experience,Specialization,Designation,Licensenumber,filname)
+
+        qry1="INSERT INTO `addstaffdata` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NULL,%s,%s,'available')"
+        val1=(str(id),name,home,place,city,pincode,Age,Gender,Experience,Specialization,Designation,filname,Registration)
         iud(qry1,val1)
-        return '''<script>alert("Registerd successfully");window.location="/"</script>'''
+        return '''<script>alert("Registered successfully");window.location="/"</script>'''
     elif Designation=="2":
         qry="INSERT INTO `login` VALUES(NULL,%s,%s,'Pharmacist')"
         val=(username,password)
         id=iud(qry,val)
 
-        qry1="INSERT INTO `addstaffdata` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'null','available')"
+        qry1="INSERT INTO `addstaffdata` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NULL,NULL,'available')"
         val1=(str(id),name,home,place,city,pincode,Age,Gender,Experience,Specialization,Designation,Licensenumber)
         iud(qry1,val1)
-        return '''<script>alert("Registerd successfully");window.location="/"</script>'''
+        return '''<script>alert("Registered successfully");window.location="/"</script>'''
     else:
         qry="INSERT INTO `login` VALUES(NULL,%s,%s,'Nurse')"
         val=(username,password)
         id=iud(qry,val)
-        qry1="INSERT INTO `addstaffdata` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'null','available')"
-        val1=(str(id),name,home,place,city,pincode,Age,Gender,Experience,Specialization,Designation,Licensenumber)
+        qry1="INSERT INTO `addstaffdata` VALUES(%s,NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,NULL,NULL,%s,'available')"
+        val1=(str(id),name,home,place,city,pincode,Age,Gender,Experience,Specialization,Designation,Registration)
         iud(qry1,val1)
-        return '''<script>alert("Registerd successfully");window.location="/login"</script>'''
+        return '''<script>alert("Registered successfully");window.location="/login"</script>'''
 
 @app.route("/Addstaff1")
 def Addstaff():
-    return render_template("AddStaffData.html")
+    return render_template("staff.html")
    
 #View Staff Data
 @app.route('/View Staff Data', methods=['get'])
@@ -278,7 +302,7 @@ def addvaccine_schedule():
 #View Doctor booking
 @app.route("/View_booking")
 def BOOK():
-    qry = "SELECT `patient details`.`Name`,`addstaffdata`.`Name` AS drname,`doctor_schedule`.`Date`,`time_slot`.`Start time`,`End time` FROM `patient details` JOIN `booking_for_doctor` ON `patient details`.`Login id`=`booking_for_doctor`.`Pat_id` JOIN `doctor_schedule` ON `booking_for_doctor`.`sch_id`=`doctor_schedule`.`sch_id` JOIN `time_slot` ON `doctor_schedule`.`tid`=`time_slot`.`Tid` JOIN `addstaffdata` ON `doctor_schedule`.`Emp_id`=`addstaffdata`.`login id` WHERE `addstaffdata`.`Designation`=1"
+    qry = "SELECT `patient details`.`Name`,`addstaffdata`.`Name` AS drname,`doctor_schedule`.`Date`,`time_slot`.`Start time`,`End time`,`booking_for_doctor`.`Status`,`booking_for_doctor`.`date` FROM `patient details` JOIN `booking_for_doctor` ON `patient details`.`Login id`=`booking_for_doctor`.`Pat_id` JOIN `doctor_schedule` ON `booking_for_doctor`.`sch_id`=`doctor_schedule`.`sch_id` JOIN `time_slot` ON `doctor_schedule`.`tid`=`time_slot`.`Tid` JOIN `addstaffdata` ON `doctor_schedule`.`Emp_id`=`addstaffdata`.`login id` WHERE `addstaffdata`.`Designation`=1"
     res = selectall(qry)
     return render_template("ViewBooking.html",val=res)
 
@@ -298,17 +322,17 @@ def BOOKING():
 #Add Vaccine Details
 @app.route('/Vaccine Details', methods=['post'])
 def add_vaccine():
-    name=request.form['textfield2']
-    description=request.form['textfield']
+    name=request.form['vaccine']
+    description=request.form['description']
 
     qry1="INSERT INTO `vaccine_table` VALUES(NULL,%s,%s,'available')"
     val1=(name,description)
     iud(qry1,val1)
-    return '''<script>alert("Registered successfuly");window.location="/admin"</script>'''
+    return '''<script>alert("vaccine details added successfully");window.location="/admin"</script>'''
 
 @app.route("/Viewvaccine")
 def Vaccine():
-    return render_template("VaccineDetails.html")
+    return render_template("vaccine.html")
 
     
 
@@ -327,11 +351,11 @@ def View_feedback():
 #sent notification
 @app.route("/Sent_Notification")
 def Sent_notification():
-    return render_template("SentNotification.html")
+    return render_template("Notification.html")
 
 @app.route('/snt_not', methods=['post'])
 def snt_not():
-    notification=request.form['textfield']
+    notification=request.form['Notification']
     q="INSERT INTO notification VALUES(NULL,CURDATE(),%s)"
     res=iud(q,notification)
     return '''<script>alert("Sent successfully");window.location="/Sent_Notification"</script>'''
@@ -348,7 +372,7 @@ def updprof():
     q1 = "SELECT * FROM `patient details` WHERE `patient details`.`Login id`=%s"
     res=selectone(q1,session['lid'])
     print(res,"hhhhhhhhhhhhhhhhhhhhhh")
-    return render_template("Patient/UPDATE PROFILE.html",val=res)
+    return render_template("Patient/update.html",val=res)
 
    
 
@@ -356,22 +380,19 @@ def updprof():
 
 @app.route("/updpro",methods=['post','get'])
 def updpro():
-    Name = request.form['nam']
-    Home = request.form['hom']
-    Place = request.form['pla']
-    City = request.form['cit']
-    pincode = request.form['pin']
-    Gender = request.form['Radio']
-    Blood_group= request.form['blood']
-    Email= request.form['mail']
-    Date_of_Birth= request.form['birth']
+    name = request.form['fname']
+    address = request.form['home']
+    Gender = request.form['gender']
+    Bloodgroup= request.form['Blood_group']
+    Email= request.form['email']
+    Date_of_birth= request.form['dob']
     Phone= request.form['phone']
-    Age = request.form['ag']
+    Age = request.form['age']
 
 
     
-    qry1 = "UPDATE `patient details` SET `Name`=%s,`Home`=%s,`place`=%s,`City`=%s,`Pincode`=%s,`Gender`=%s,`Blood_Group`=%s,`Email`=%s,`Phone_number`=%s,`Date_of_birth`=%s,`Age`=%s WHERE `Login id`=%s"
-    val1 = (Name,Home,Place,City,pincode,Gender,Blood_group,Email,Date_of_Birth,Phone,Age,session['lid'])
+    qry1 = "UPDATE `patient details` SET `Name`=%s,`Gender`=%s,`Blood_Group`=%s,`Email`=%s,`Phone_number`=%s,`Date_of_birth`=%s,`Age`=%s,`Address`=%s WHERE `Login id`=%s"
+    val1 = (name,Gender,Bloodgroup,Email,Date_of_birth,Phone,Age,address,session['lid'])
     iud(qry1, val1)
     return '''<script>alert("profile updated successfuly");window.location="Patienthome"</script>'''
 
@@ -389,16 +410,22 @@ def DocotrBooking1():
     id=request.args.get('id')
     d=datetime.now().strftime("%Y-%m-%d")
     session['dlid']=id
-    return render_template("Patient/Doctor Booking1.html",d=d)
+    qr="SELECT `time_slot`.*,`doctor_schedule`.*  FROM `time_slot` JOIN `doctor_schedule` ON `doctor_schedule`.`tid`=`time_slot`.`Tid` WHERE `doctor_schedule`.`Emp_id`=%s"
+    val=(session['dlid'])
+
+    res=selectall2(qr,val)
+    print(res)
+    return render_template("Patient/Doctor Booking1.html",d=d,val=res)
 
 @app.route("/search_schd",methods=['post'])
 def search_schd():
-    date=request.form['textfield']
-    d=datetime.now().strftime("%Y-%m-%d")
-    qr="SELECT `time_slot`.*,`doctor_schedule`.*  FROM `time_slot` JOIN `doctor_schedule` ON `doctor_schedule`.`tid`=`time_slot`.`Tid` WHERE `doctor_schedule`.`Emp_id`=%s AND `doctor_schedule`.`Date`=%s"
-    val=(session['dlid'],date)
+    # date=request.form['textfield']
+    # d=datetime.now().strftime("%Y-%m-%d")
+    qr="SELECT `time_slot`.*,`doctor_schedule`.*  FROM `time_slot` JOIN `doctor_schedule` ON `doctor_schedule`.`tid`=`time_slot`.`Tid` WHERE `doctor_schedule`.`Emp_id`=%s AND `doctor_schedule`.`Date`=CURDATE()"
+    val=(session['dlid'])
 
     res=selectall2(qr,val)
+    print(res)
     return render_template("Patient/Doctor Booking1.html",val=res,d=d)
 
 @app.route("/doctorbook")
@@ -411,12 +438,28 @@ def doctorbook():
         return '''<script>alert("booking closed");window.location="DoctorBooking"</script>'''
 
     else:
-        q="INSERT INTO `booking_for_doctor` VALUES(NULL,%s,%s,'book')"   
+        q="INSERT INTO `booking_for_doctor` VALUES(NULL,%s,%s,'book',curdate())"   
         v=(session['lid'],str(id))
         iud(q,v)
         qr="UPDATE `doctor_schedule` SET `strength`=`strength`-1 WHERE `sch_id`=%s" 
         iud(qr,str(id))
         return '''<script>alert("booking success");window.location="DoctorBooking"</script>'''
+
+#View booking function   
+@app.route("/View_book1")
+def View_book1():
+    qry = "SELECT `booking_for_doctor`.*,`addstaffdata`.`Name`,`doctor_schedule`.`Date`,`time_slot`.* FROM `booking_for_doctor` JOIN `doctor_schedule` ON `doctor_schedule`.`sch_id`=`booking_for_doctor`.`sch_id` JOIN `addstaffdata` ON `addstaffdata`.`login id`=`doctor_schedule`.`Emp_id` JOIN `time_slot` ON `time_slot`.`Tid`=`doctor_schedule`.`tid` WHERE `booking_for_doctor`.`Pat_id`=%s and booking_for_doctor.Status='book' "
+    res = selectall2(qry,session['lid'])
+    return render_template("Patient/View_booking.html",val=res)
+
+#cancel booking function
+@app.route("/cancel_booking")
+def cancel_booking():
+    id = request.args.get('id')
+    qry = "UPDATE `booking_for_doctor` SET `Status`='canceled' WHERE `Bid`=%s"
+    iud(qry,id)
+    return '''<script>alert("Booking cancelled");window.location="Patienthome"</script>'''
+
 
 
 #Vaccine Booking Function
@@ -478,10 +521,12 @@ def vaccinebook3():
 
 
 
-
-@app.route("/View prescription")
+#VIEW PRESCRIPTION
+@app.route("/View_prescription")
 def view():
-    return render_template("Patient/ViewPrescription.html")
+    q="SELECT `prescription_table`.`Prescription`,`prescription_table`.`Status`,`addstaffdata`.`Name` FROM `prescription_table` JOIN `booking_for_doctor` ON `booking_for_doctor`.`Bid`=`prescription_table`.`Bid`  JOIN `doctor_schedule` ON `doctor_schedule`.`sch_id`=`booking_for_doctor`.`sch_id` JOIN `addstaffdata` ON `addstaffdata`.`login id`=`doctor_schedule`.`Emp_id` WHERE `booking_for_doctor`.`Pat_id`=%s"
+    res=selectall2(q,session['lid'])
+    return render_template("Patient/ViewPrescription.html",val=res)
 
 
 
@@ -491,7 +536,7 @@ def view():
 #Add Feeedback Function
 @app.route("/Add_feedbac",methods=['post'])
 def Add_feed():
-    feedback=request.form['textfield']
+    feedback=request.form['Feedback']
 
     qry1="INSERT INTO `feedback_table` VALUES(NULL,%s,CURDATE(),%s)"
     val=(session['lid'],feedback)
@@ -500,49 +545,144 @@ def Add_feed():
 
 @app.route("/Add_feedback")
 def Add_feedback():
-    return render_template("Patient/SendFeedback.html")
+    return render_template("Patient/addFeed.html")
 
 #View notification function
 @app.route('/Viewnotif', methods=['get'])
 def Viewnotif():
     qry = "SELECT * FROM `notification`"
     res=selectall(qry)
+    print(len(res),"*********************")
+    import datetime
+    # x=datetime.strptime('5/5/2019','%d/%m/%Y')
+    # x = datetime.datetime(res[0]["Date"],'%Y/%m/%d')
+
+    # print(x.strftime("%d %b %Y"))
+    x = datetime.datetime.strptime(str(res[0]["Date"]), '%Y-%m-%d').strftime('%d/%B/%Y')
+    print(x)
+    for i in range(len(res)):
+        res[i]["Date"] = datetime.datetime.strptime(str(res[i]["Date"]), '%Y-%m-%d').strftime('%d-%b-%Y')
+
+    # print(res[0]["Date"])
     return render_template('Patient/ViewNotification.html',val=res)
 
 
-@app.route("/adfeedback")
-def adfeedbak():
-    return render_template("Patient/ADD FEEDBACK.html")
+
 
 
 #Doctor Home
 @app.route("/Doctor")
 def Docotor_home():
-    return render_template("Doctor/Doctor home.html")
+    return render_template("Doctor_home.html")
 
-@app.route("/View Booking")
-def Booking2():
-    return render_template("Doctor/ViewBooking.html")
+#View Doctor booking
+@app.route("/View_booked")
+def BOOKED():
+    # qry = "SELECT `patient details`.`Name`,`addstaffdata`.`Name` AS drname,`doctor_schedule`.`Date`,`time_slot`.`Start time`,`End time`,`booking_for_doctor`.`Status` FROM `patient details` JOIN `booking_for_doctor` ON `patient details`.`Login id`=`booking_for_doctor`.`Pat_id` JOIN `doctor_schedule` ON `booking_for_doctor`.`sch_id`=`doctor_schedule`.`sch_id` JOIN `time_slot` ON `doctor_schedule`.`tid`=`time_slot`.`Tid` JOIN `addstaffdata` ON `doctor_schedule`.`Emp_id`=`addstaffdata`.`login id` WHERE `addstaffdata`.`Designation`=1 and `doctor_schedule`.`Emp_id`=%s" 
+    qry="SELECT `patient details`.`Name`,`Login id`,`doctor_schedule`.`Date`,`time_slot`.*,`booking_for_doctor`.* ,`booking_for_doctor`.date as d FROM `doctor_schedule` JOIN `time_slot` ON `time_slot`.`Tid`=`doctor_schedule`.`tid` JOIN `booking_for_doctor` ON `booking_for_doctor`.`sch_id`=`doctor_schedule`.`sch_id` JOIN `patient details` ON `patient details`.`Login id`=`booking_for_doctor`.`Pat_id` WHERE `doctor_schedule`.`Emp_id`=%s AND `booking_for_doctor`.`Status`='book'"
+    res = selectall2(qry,session['lid'])
+    return render_template("Doctor/ViewBooking.html",val=res)
 
-@app.route("/Create Prescription")
+#Create prescription function
+@app.route("/CreatePrescription")
 def Create():
-    return render_template("Doctor/CreatePrescription.html")
+    id=request.args.get('id')
+    session['bbid']=id
+    q="SELECT * FROM `prescription_table` WHERE `Bid`=%s"
+    res=selectall2(q,str(id))
+    return render_template("Doctor/CreatePrescription.html",val=res)
 
-@app.route("/Update prescription")
-def Update():
-    return render_template("Doctor/UpdatePrescription.html")
+#Upload prescription
+@app.route("/Upload_Prescription")
+def upload():
+   return render_template("Doctor/upload.html")
+
+#Upload prescription
+@app.route("/upload_prescr",methods=['post'])
+def upload_prescr():
+    pres=request.files['file']
+    pp=secure_filename(pres.filename)
+    pres.save(os.path.join('static/prescription',pp))
+
+    qry="INSERT INTO `prescription_table` VALUES(NULL,%s,%s,curdate(),'pending')"
+    val=(session['bbid'],pp)
+    iud(qry,val)
+   
+    return '''<script>alert("prescription added successfully");window.location="CreatePrescription"</script>'''
+    
 
 
-@app.route("/View notifi")
-def Notifi():
-    return render_template("Doctor/ViewNotification.html")
+
+
+
+
+
+# @app.route("/make_presc",methods=['POST'])
+# def make_presc():
+#     mid=request.form['select']
+#     remark=request.form['textfield']
+#     q="INSERT INTO `prescription_table` VALUES(NULL,%s,%s,%s,'pending')"
+#     v=(session['bid'],mid,remark)
+#     iud(q,v)
+#     return '''<script>alert("Prescription added successfully");window.location="View_booked"</script>'''
+
+
+
+
+#Create report function
+@app.route("/Create_report")
+def Create_report():
+    
+    return render_template("Doctor/Create_report.html")
+
+@app.route("/addCreate_report",methods=['post'])
+def addCreate_report():
+    report=request.form['textarea']
+    q="INSERT INTO `report` VALUES(NULL,%s,%s,CURDATE())"
+    v=(session['brid'],report)
+    iud(q,v)
+    return '''<script>alert("report added succesfully");window.location="View_booked"</script>'''
+
+
+#View previous report function
+@app.route("/View_report")
+def View_report():
+    id=request.args.get('id')
+    bid=request.args.get('id')
+    session['brid']=id
+    pid=request.args.get('pid')
+    q="SELECT  * FROM `report` WHERE `Bid` IN(SELECT `Bid` FROM `booking_for_doctor` WHERE `Pat_id`=%s)"
+    res=selectall2(q,pid)
+    return render_template("Doctor/viewReport.html",val=res)
+
+
+
+
+#View notification function by doctor
+@app.route('/Viewnoti', methods=['get'])
+def noti():
+    qry = "SELECT * FROM `notification`"
+    res=selectall(qry)
+    print(len(res),"*********************")
+    import datetime
+    # x=datetime.strptime('5/5/2019','%d/%m/%Y')
+    # x = datetime.datetime(res[0]["Date"],'%Y/%m/%d')
+
+    # print(x.strftime("%d %b %Y"))
+    x = datetime.datetime.strptime(str(res[0]["Date"]), '%Y-%m-%d').strftime('%d/%B/%Y')
+    print(x)
+    for i in range(len(res)):
+        res[i]["Date"] = datetime.datetime.strptime(str(res[i]["Date"]), '%Y-%m-%d').strftime('%d-%b-%Y')
+
+    # print(res[0]["Date"])
+    return render_template('Pharmacist/ViewNotification.html',val=res)
 
 
 
 #Nurse
 @app.route("/Nurse")
 def Nurse_home():
-    return render_template("Nurse/Nurse Homepage.html")
+    return render_template("Nurse_1.html")
 
 @app.route("/Manage vaccine booking")
 def Nurse_view():
@@ -551,34 +691,277 @@ def Nurse_view():
 
     return render_template("Nurse/Manage Booking.html",val=res)
 
-@app.route("/View notif")
-def Nurse_noti():
-    return render_template("Nurse/ViewNotification.html")
+#View notification function
+@app.route("/notify")
+def notify():
+    qry = "SELECT * FROM `notification`"
+    res=selectall(qry)
+    print(len(res),"*********************")
+    import datetime
+    # x=datetime.strptime('5/5/2019','%d/%m/%Y')
+    # x = datetime.datetime(res[0]["Date"],'%Y/%m/%d')
+
+    # print(x.strftime("%d %b %Y"))
+    x = datetime.datetime.strptime(str(res[0]["Date"]), '%Y-%m-%d').strftime('%d/%B/%Y')
+    print(x)
+    for i in range(len(res)):
+        res[i]["Date"] = datetime.datetime.strptime(str(res[i]["Date"]), '%Y-%m-%d').strftime('%d-%b-%Y')
+
+    # print(res[0]["Date"])
+    return render_template('Pharmacist/ViewNotification.html',val=res)
 
 
+#View vaccine booking function
 @app.route("/vaccinated")
 def vaccinated():  
     id=request.args.get('id')
     qry="UPDATE `booking_for_vaccination` SET `Status`='vaccinated' WHERE `Vcb_id`=%s"
     iud(qry,str(id))
-    return '''<script>alert("vaccinated succesfully");window.location="Nurse"</script>'''
+    return '''<script>alert("vaccinated successfully");window.location="Nurse"</script>'''
 
 #Pharmacist
 @app.route("/Pharmacist")
 def Pharmacist_home():
-    return render_template("Pharmacist/Pharmacist Homepage.html")
+    return render_template("Pharmacist_home.html")
+
+
+#Add medicine details
+@app.route("/addmedicine",methods=['post'])
+def addmedicine():
+    Medicine_name=request.form['Medicine_Name']
+    Quantity=request.form['Quantity']
+    Batch=request.form['Batch_Number']
+    Manu=request.form['Manufacture']
+    Expiriy=request.form['Expiry']
+    Type=request.form['Type']
+    Description=request.form['Description']
+    Dosage=request.form['Dosage']
+
+    q3="INSERT INTO `medicine_table` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s)"
+    v3=(Medicine_name,Quantity,Batch,Manu,Expiriy,Type,Description,Dosage)
+    res=iud(q3,v3)
+    return '''<script>alert("Medicine added successfully");window.location="Pharmacist"</script>'''
 
 @app.route("/Medicine details")
 def Pharmacist_medicine():
-    return render_template("Pharmacist/Viewmedicinedetails.html")
+    return render_template("Pharmacist/add-medicine.html")
 
-@app.route("/Manage Prescription")
-def Pharmacist_prescription():
-    return render_template("Pharmacist/viewPrescription and addMedicine.html")
+#Manage medicine details
+@app.route("/View_details")
+def View_details():
+    q="SELECT * FROM `medicine_table` ORDER BY `Medicine_name` "
+    res=selectall(q)
+    q1="SELECT * FROM `medicine_table`"
+    res1=selectall(q1)
+    print(res,"qqqqqqqqqqqqqqqqqqqqqqqqqq")
+    return render_template("Pharmacist/MANAGE_MEDICINE.html",data=res,val=res1)
 
-@app.route("/View n")
+
+@app.route("/View_details1",methods=['post'])
+def View_details1():
+    mid=request.form['mid']  
+    print(mid,'aaaaaaaaaaaaaaaaaaaaaaaa')
+    q="SELECT * FROM `medicine_table`"
+    res=selectall(q)
+    q1="SELECT * FROM `mesdicine_table` WHERE `Med_id`=%s"
+    res1=selectall2(q1,mid)
+    return render_template("Pharmacist/MANAGE_MEDICINE.html",data=res1,val=res)
+
+#Edit Details
+@app.route("/edit_details")
+def editMedicine_details():
+    id=request.args.get('id')
+    session['mid']=id
+    qry="SELECT * FROM `medicine_table` WHERE `Med_id`=%s"
+    res=selectone(qry,str(id))
+    return render_template("Pharmacist/update.html",val=res)
+
+#Update Details
+@app.route("/update_details",methods=['post'])
+def update_details():
+    medicine=request.form['textfield2']
+    quantity=request.form['textfield4']
+    batch_number=request.form['textfield']
+    manufacture_date=request.form['textfield3']
+    expiry_date=request.form['textfield5']
+
+    qry1="UPDATE `medicine_table` set `Medicine_name`=%s,`Quantity`=%s,`Batch_number`=%s,`Manufacture_date`=%s,`Expiry_date`=%s WHERE `Med_id`=%s"
+    val=(medicine,quantity,batch_number,manufacture_date,expiry_date,session['mid'])
+    iud(qry1,val)
+
+    return '''<script>alert("updated successfully");window.location="edit_details"</script>'''
+
+
+    
+
+
+
+#Delete Details
+@app.route("/delete_details")
+def delete_details():
+    id=request.args.get('id')
+    qry="delete FROM `medicine_table` WHERE `Med_id`=%s"
+    iud(qry,str(id))
+
+
+    return '''<script>alert("Deleted successfully");window.location="Pharmacist"</script>'''
+
+
+
+#View patient details function
+@app.route("/View_Patient_Details")
+def View_Patient_Details():
+    qry = "SELECT * FROM `patient details` JOIN `booking_for_doctor` ON `patient details`.`Login id`=`booking_for_doctor`.`Pat_id`"
+    res = selectall(qry)
+    return render_template("Pharmacist/view_presc.html",val=res)
+
+
+#Search patient  details function
+@app.route("/search_patient",methods=['post'])
+def search_patient():
+    print(request.form)
+    name=request.form['mid']
+    print(name)
+    qry="SELECT  `patient details`.*,`booking_for_doctor`.`Bid`,`doctor_schedule`.`Date` FROM `booking_for_doctor` JOIN `patient details` ON `patient details`.`Login id`=`booking_for_doctor`.`Pat_id` JOIN `doctor_schedule` ON `doctor_schedule`.`sch_id`=`booking_for_doctor`.`sch_id` WHERE `patient details`.`Login id`=%s"
+    res=selectall2(qry,name)
+    print(res,"aaaaaaaaaaaaaaaaaaaaa")
+    return render_template("Pharmacist/view_presc.html",val1=res)
+
+
+
+
+
+#Manage prescription function
+@app.route("/managePrescription")
+def managePrescription():
+    id=request.args.get('id')
+    q="SELECT `prescription_table`.*,`addstaffdata`.`Name` FROM `addstaffdata` JOIN `doctor_schedule` ON `doctor_schedule`.`Emp_id`=`addstaffdata`.`login id` JOIN `booking_for_doctor` ON `booking_for_doctor`.`sch_id`=`doctor_schedule`.`sch_id` JOIN `prescription_table` ON `prescription_table`.`Bid`=`booking_for_doctor`.`Bid` WHERE `booking_for_doctor`.`Bid`=%s"
+    res=selectall2(q,str(id))
+    return render_template("Pharmacist/manage-presc.html",val=res)
+
+
+
+
+@app.route("/edit_status")
+def edit_status():
+    id=request.args.get('id')
+    session['presid']=id
+    return render_template("Pharmacist/status1.html")
+
+
+@app.route("/update_status", methods=['post'])
+def update_status():
+    status=request.form['textfield']
+    qry="UPDATE `prescription_table` SET STATUS=%s WHERE `Presc_id`=%s"
+    iud(qry,(status,session['presid']))
+
+    return ''''<script>alert("updated");window.location="View_Patient_Details"</script>'''
+
+
+
+#UPDATE MEDICINE details
+@app.route("/medicineDetails",methods=['post','get'])
+def medicineDetails():
+    q="SELECT*FROM `medicine_table`"
+    res=selectall(q)
+    return render_template("Pharmacist/update-med.html",val=res)
+
+
+@app.route("/medicineDetails1",methods=['post'])
+def medicineDetails1():
+    mdcn=request.form['select']
+    qty=request.form['textfield']
+    q="UPDATE `medicine_table` SET `Quantity`=`Quantity`-%s WHERE `Med_id`=%s"
+    v=(qty,mdcn)
+    iud(q,v)
+    return '''<script>alert("updated");window.location='/medicineDetails'</script>'''
+
+
+
+
+#View patient details
+# @app.route("/View_Patient_Details")
+# def View_Patient_Details():
+#     q1="SELECT `booking_for_doctor`.*,`patient details`.`Name`,`doctor_schedule`.`Date` FROM `booking_for_doctor` JOIN `patient details` ON `patient details`.`Login id`=`booking_for_doctor`.`Pat_id` JOIN `doctor_schedule` ON `doctor_schedule`.`sch_id`=`booking_for_doctor`.`sch_id`"
+    
+#     res=selectall(q1)
+#     return render_template("Pharmacist/ViewPatientNames.html",val=res)
+
+
+
+
+# @app.route("/Manage Prescription")
+# def Pharmacist_prescription():
+#     id=request.args.get('id')
+#     q="SELECT `prescription_table`.*,`medicine_table`.* FROM `medicine_table`JOIN `prescription_table` ON `prescription_table`.`Med_id`=`medicine_table`.`Med_id` WHERE `prescription_table`.`Bid`=%s"
+#     res=selectall2(q,str(id))
+#     return render_template("Pharmacist/viewPrescription and addMedicine.html",val=res) 
+
+#View and update status
+# @app.route("/medicine_given")
+# def medicine_given():  
+#     id=request.args.get('id')
+#     qry="UPDATE `prescription_table` SET `Status`='medicine given' WHERE `Bid`=%s"
+#     iud(qry,str(id))
+#     return '''<script>alert("medicine added successfully");window.location="Pharmacist"</script>'''
+
+
+@app.route("/View_n")
 def Pharmacist_notification():
-    return render_template("Pharmacist/ViewNotification.html")
+    qry = "SELECT * FROM `notification`"
+    res=selectall(qry)
+    print(len(res),"*********************")
+    import datetime
+    # x=datetime.strptime('5/5/2019','%d/%m/%Y')
+    # x = datetime.datetime(res[0]["Date"],'%Y/%m/%d')
+
+    # print(x.strftime("%d %b %Y"))
+    x = datetime.datetime.strptime(str(res[0]["Date"]), '%Y-%m-%d').strftime('%d/%B/%Y')
+    print(x)
+    for i in range(len(res)):
+        res[i]["Date"] = datetime.datetime.strptime(str(res[i]["Date"]), '%Y-%m-%d').strftime('%d-%b-%Y')
+
+    # print(res[0]["Date"])
+    return render_template('Pharmacist/ViewNotification.html',val=res)
+    
+
+@app.route("/viewreport")
+def viewreport():
+    return render_template("ViewBookingReport.html")
+
+
+@app.route("/viewreport1",methods=['post'])
+def viewreport1():  
+    fdate=request.form['textfield']
+    tdate=request.form['textfield3']
+    q="SELECT COUNT(*) AS c,`Name` FROM `vaccine_table` JOIN `vaccine_schedule` ON `vaccine_schedule`.`Vac_id`=`vaccine_table`.`vd_id` JOIN `booking_for_vaccination` ON `booking_for_vaccination`.`Vsch_id`=`vaccine_schedule`.`Vsch_id` WHERE `Date` BETWEEN %s AND %s GROUP BY `vaccine_table`.`vd_id`"
+    v=(fdate,tdate)
+    res=selectall2(q,v)
+
+    q1="SELECT COUNT(*) AS co FROM `booking_for_doctor` WHERE  `date` BETWEEN %s AND %s "
+    re=selectall2(q1,v)
+    q2="SELECT * FROM `medicine_table` WHERE `Quantity`<300"
+    res1=selectall(q2)
+    print(res)
+    print(re)
+    print(res1)
+    result=[]
+    for i in res:
+        row={"title":"Vaccine "+i['Name'],"des":str(i['c'])+" patients Booked"}
+        result.append(row)
+    for i in re:
+        row={"title":"Doctor Bookings:","des":str(i['co'])+" patients Booked"}
+        result.append(row)
+    for i in res1:
+        row={"title":"Medicine "+i['Medicine_name'],"des":str(i['Quantity'])+" units Remaining"}
+        result.append(row)
+
+
+
+
+
+    return render_template("ViewBookingReport.html",val=result)
+
 
 
 

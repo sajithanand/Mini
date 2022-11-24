@@ -1,15 +1,50 @@
+
+
+
+
+
+
+
+
 <!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Vaccine Schedule</title>
+<title>Manage_doctor_schedule</title>
 </head> -->
 {% extends "admin_home1.html" %}
 {% block body %}
 
-<body>
-<form action="addvaccine_schedule" method="post" enctype="multipart/form-data" name="form1" id="form1">
-  <table width="452" height="331" border="2">
+<style>
+  #customers {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid rgb(14, 7, 7);
+    padding: 8px;
+  }
+  
+  #customers tr:nth-child(even){background-color: #92e8ee;}
+  
+  #customers tr:hover {background-color: rgba(245, 238, 238, 0.959);}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #19c2ec;
+    color: rgb(3, 10, 8);
+  }
+  </style>
+
+
+
+<body><h1>ADD VACCINE SCHEDULE</h1>
+<form id="form1" name="form1" method="post" action="addvaccine_schedule">
+  <table width="452" height="331" border="2" id="customers">
     <tr>
       <th scope="col">Vaccine name </th>
       <th scope="col"><label>
@@ -33,21 +68,21 @@
       </label></td>
     </tr>
     <tr>
-      <td> <div align="center">Date </div></td>
-      <td><label>
+      <td style="background-color:  #19c2ec;"> <div align="center">Date </div></td>
+      <td style="background-color:  #19c2ec;" ><label>
         <input type="date" name="textfield" min="{{d}}" required/>
       </label></td>
     </tr>
     <tr>
-      <td><div align="center">Strength</div></td>
+      <td><div align="center" >Strength</div></td>
       <td><label>
-        <input type="number" name="textfield2" required/>
+        <input type="number" name="textfield2" min="1" required/>
       </label></td>
     </tr>
     <tr>
-      <td colspan="2"><label>
+      <td colspan="2" style="background-color:  #19c2ec;"><label>
         <div align="center">
-          <input type="submit" name="Submit" value="ADD" />
+          <input type="submit" name="Submit" value="ADD"  class="btn btn-primary btn-sm col-md m-1"/>
           </div>
       </label></td>
     </tr>

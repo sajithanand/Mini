@@ -1,0 +1,143 @@
+<html lang="en">
+  <head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <style>
+         .gradient-custom {
+      /* fallback for old browsers */
+      background: #f093fb;
+
+      /* Chrome 10-25, Safari 5.1-6 */
+      background: -webkit-linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1));
+
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      background: linear-gradient(to bottom right, rgba(47, 71, 204), rgba(156, 226, 69))
+      }
+
+      .register-photo {
+          background:linear-gradient(to bottom right, rgb(87, 233, 50), rgb(53, 53, 173));
+          padding: 80px 0;
+          height: 750px;
+
+      }
+
+      .register-photo .image-holder {
+          display: table-cell;
+          width: auto;
+          background: url(https://tse4.mm.bing.net/th?id=OIP.mkeL8Hod34Zi264DK6zssQHaEK&pid=Api&P=0);
+          background-size: cover;
+          border-radius :30px;
+      }
+
+      .register-photo .form-container {
+          display: table;
+          max-width: 900px;
+          width: 90%;
+          margin: 0 auto;
+          box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+          margin-top: 125px;
+          border-radius:30px;
+          background:#fff;
+          transition: 0.9s;
+      }
+
+        .register-photo .form-container:hover {
+            box-shadow: 0 8px 16px 0 rgba(25, 72, 225, 0.2);
+            transform:scale(1.09);
+            }
+      .register-photo form {
+          display: table-cell;
+          width: 450px;
+          background-color: #ffffff;
+          padding: 40px 60px;
+          color: #505e6c;
+          border-radius :30px;
+      }
+
+      @media (max-width:991px) {
+          .register-photo form {
+              padding: 40px;
+          }
+      }
+
+      .register-photo form h2 {
+          font-size: 24px;
+          line-height: 1.5;
+          margin-bottom: 30px;
+      }
+
+      .register-photo form .form-control {
+          background: #f7f9fc;
+          border: none;
+          border-bottom: 1px solid #dfe7f1;
+          border-radius: 0;
+          box-shadow: none;
+          outline: none;
+          color: inherit;
+          text-indent: 6px;
+          height: 80px;
+      }
+
+
+
+      .register-photo form .btn-primary {
+          background: #f4476b;
+          border: none;
+          border-radius: 4px;
+          padding: 11px;
+          box-shadow: none;
+          margin-top: 35px;
+          text-shadow: none;
+          outline: none !important;
+      }
+
+      .register-photo form .btn-primary:hover,
+      .register-photo form .btn-primary:active {
+          background: #eb3b60;
+      }
+
+      .register-photo form .btn-primary:active {
+          transform: translateY(1px);
+      }
+
+      .register-photo form .already {
+          display: block;
+          text-align: center;
+          font-size: 12px;
+          color: #6f7a85;
+          opacity: 0.9;
+          text-decoration: none;
+      }
+  </style>
+     <div class="gradient-custom">
+         <div class="register-photo pt-4">
+        <div class="form-container">
+          <div class="image-holder"></div>
+          <form action="login" method="post" class="needs-validation">
+              <h2 class="text-center"><strong>Login</strong></h2>
+              <div class="form-group"><input class="form-control is-valid" type="" name="username" placeholder="Username" required></div>
+              <div class="form-group"><input class="form-control is-valid" type="password" name="password" placeholder="Password" required>
+              </div>
+              <div class="form-group"><button class="btn btn-success btn-block" type="submit">Login</button></div>
+              <b><a href="/register" class="already">Create new account? Sign Up here.</a></b>
+          </form>
+      </div>
+      </div>
+  </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
